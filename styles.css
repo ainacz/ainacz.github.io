@@ -532,32 +532,21 @@ figure.shot{margin:0;}
   position:relative; overscroll-behavior-x:contain;
 }
 .carousel-track::-webkit-scrollbar{display:none;}
-/* на десктопе слайд занимает всю ширину ленты: каждый кадр встаёт в начало,
-   лента кончается ровно последним кадром — пустого хвоста нет, снап-точки
-   достижимы до последней (счётчик 01..05, стрелка вправо гаснет на конце) */
+/* лукбук — композиция кадров в ряд: на десктопе видно ~2.5–3 кадра (снап по
+   началу каждого), лента кончается последним кадром; стрелки листают на один */
 .vanta-slide{
-  flex:0 0 100%; scroll-snap-align:start;
+  flex:0 0 clamp(280px,30vw,360px); scroll-snap-align:start;
   display:flex; flex-direction:column; margin:0;
 }
-/* карточка-паспарту: тёплая подложка отделяет фото от фона сайта */
+/* карточка с прямыми углами: без рамки и подложки, фото лежит прямо на фоне сайта */
 .vanta-card{
-  aspect-ratio:4/5; padding:8px;
-  border-radius:16px; overflow:hidden;
-  border:1px solid rgba(125,23,53,.12);
-  background:#FAF7F0;
-  transition:border-color .25s ease;
+  aspect-ratio:3/4; max-height:480px; padding:0;
+  overflow:hidden;
 }
 .vanta-card img{
   display:block; width:100%; height:100%; object-fit:cover;
-  border-radius:10px; transition:transform .7s cubic-bezier(.16,1,.3,1);
+  transition:transform .7s cubic-bezier(.16,1,.3,1);
 }
-/* hero-кадр: без паспарту и рамки, края радиально растворяются в фоне сайта */
-.vanta-slide-hero .vanta-card{
-  padding:0; border:0; background:transparent;
-  -webkit-mask-image:radial-gradient(ellipse at center, black 60%, transparent 98%);
-  mask-image:radial-gradient(ellipse at center, black 60%, transparent 98%);
-}
-.vanta-card:hover{border-color:rgba(125,23,53,.4);}
 .vanta-card:hover img{transform:scale(1.03);}
 .vanta-slide figcaption{
   font-family:var(--mono); font-size:11.5px; letter-spacing:.05em;
@@ -579,9 +568,8 @@ figure.shot{margin:0;}
 }
 
 @media (max-width:768px){
-  .vanta-slide{flex-basis:85vw;}
-  /* небольшой хвост, чтобы последний кадр мог встать в начало */
-  .carousel-track{padding-right:calc(100% - 85vw);}
+  /* видно ~1.2–1.5 кадра; хвост-падинг не нужен: лента кончается последним кадром */
+  .vanta-slide{flex-basis:75vw;}
 }
 @media (prefers-reduced-motion: reduce){
   .vanta-card img, .carousel-btn, .carousel-progress-fill{transition:none;}
@@ -677,12 +665,13 @@ html.js .p-case-head{cursor:pointer;}
 html.js .p-toggle{
   display:inline-flex; align-items:center; gap:8px;
   margin-top:2px;
-  padding:10px 20px;
+  padding:11px 22px;
   border-radius:999px;
   border:1.5px solid rgba(125,23,53,.45);
   background:transparent;
   color:var(--wine);
-  font:inherit; font-weight:600;
+  font-family:var(--mono); font-size:12.5px; font-weight:600;
+  letter-spacing:0.06em; text-transform:uppercase;
   cursor:pointer;
   transition:background .25s ease, color .25s ease, border-color .25s ease;
 }
@@ -710,13 +699,6 @@ html.js .p-case.is-open .p-case-inner{
   transition:visibility 0s;
 }
 .p-case-inner > :first-child{margin-top:36px;}
-
-/* мягкая виньетка кадров VANTA: края фото растворяются в подложку карточки.
-   Hero-кадр не трогаем — у него собственная радиальная маска к фону страницы. */
-.vanta-slide:not(.vanta-slide-hero) .vanta-card img{
-  -webkit-mask-image:radial-gradient(ellipse at center, black 74%, transparent 98%);
-  mask-image:radial-gradient(ellipse at center, black 74%, transparent 98%);
-}
 
 @media (prefers-reduced-motion: reduce){
   html.js .p-case-body{transition:none;}
