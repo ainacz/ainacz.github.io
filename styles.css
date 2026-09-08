@@ -534,10 +534,11 @@ figure.shot{margin:0;}
   position:relative; overscroll-behavior-x:contain;
 }
 .carousel-track::-webkit-scrollbar{display:none;}
-/* на десктопе слайд = половина ленты: экран всегда заполнен ровно двумя фото,
-   лента кончается последним кадром — пустого хвоста нет */
+/* на десктопе слайд занимает всю ширину ленты: каждый кадр встаёт в начало,
+   лента кончается ровно последним кадром — пустого хвоста нет, снап-точки
+   достижимы до последней (счётчик 01..05, стрелка вправо гаснет на конце) */
 .vanta-slide{
-  flex:0 0 calc(50% - 12px); scroll-snap-align:start;
+  flex:0 0 100%; scroll-snap-align:start;
   display:flex; flex-direction:column; margin:0;
 }
 /* карточка-паспарту: тёплая подложка отделяет фото от фона сайта */
