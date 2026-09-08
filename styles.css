@@ -488,10 +488,8 @@ figure.shot{margin:0;}
 /* ---------- КЕЙС: VANTA — LOOKBOOK CAROUSEL ---------- */
 /* Адаптивная горизонтальная карусель со снапом: свои стрелки, счётчик и прогресс.
    Изолированные классы .vanta-* / .carousel-*, ничего глобального не трогает.
-   Десктоп: кадр = половина ленты, экран всегда заполнен двумя фото, лента
-   заканчивается последним кадром — пустого хвоста нет. Мобайл: 85vw на кадр. */
-/* общий контейнер кейса внутри #projects */
-.project-case{margin-top:52px;}
+   Десктоп: кадр = вся ширина ленты, лента кончается последним кадром —
+   пустого хвоста нет. Мобайл: 85vw на кадр. */
 /* акцентная часть заголовка кейса */
 .project-title em{font-style:normal; font-weight:600; color:var(--wine);}
 
@@ -590,23 +588,18 @@ figure.shot{margin:0;}
   .vanta-card:hover img{transform:none;}
 }
 
-/* ---------- AI-МЕНЕДЖЕР: ВИДЕО-МОКАП В ДВЕ КОЛОНКИ ---------- */
-/* Изолировано контекстом .ai-case — на dev/index.html и другие секции не влияет.
-   Слева: заголовок + описание + шаги «Как это устроено». Справа: вертикальный мокап видео.
-   Мобильный порядок (текст -> плеер -> шаги) задан через grid-template-areas. */
+/* ---------- AI-МЕНЕДЖЕР: РАСКРЫТЫЙ КЕЙС ---------- */
+/* Детали кейса бота (внутри аккордеона): слева шаги «Как это устроено»,
+   справа — вертикальный мокап видео. Заголовок и вводный текст — в шапке
+   аккордеона (.p-case-head) над этой сеткой. */
 .ai-case{
-  margin-top:52px;
   display:grid;
   grid-template-columns:1fr 340px;
-  grid-template-areas:
-    "intro player"
-    "steps player";
+  grid-template-areas:"steps player";
   gap:48px;
   align-items:start;
 }
-.ai-intro{grid-area:intro; min-width:0;}
 .ai-steps{grid-area:steps; min-width:0;}
-.ai-case .project-intro{margin-bottom:0;}
 .ai-case .botflow{margin-bottom:0;}
 
 /* правая колонка: компактный мокап телефона, ролик не растягивается */
@@ -639,9 +632,95 @@ figure.shot{margin:0;}
   .ai-case{
     grid-template-columns:1fr;
     grid-template-areas:
-      "intro"
-      "player"
-      "steps";
+      "steps"
+      "player";
     gap:36px;
   }
 }
+
+/* ---------- АККОРДЕОН КЕЙСОВ (PROGRESSIVE DISCLOSURE) ---------- */
+/* Каждый кейс — карточка .p-case: шапка всегда видна, детали раскрываются
+   плавно через grid-template-rows 0fr -> 1fr. Изолированные классы .p-*.
+   Без JS (на <html> нет класса .js) всё раскрыто, кнопки скрыты — контент
+   никогда не теряется. */
+.p-case{
+  background:#FAF7F0;
+  border:1px solid rgba(125,23,53,.12);
+  border-radius:18px;
+  padding:clamp(22px,3.2vw,36px);
+  margin-top:34px;
+  transition:border-color .25s ease;
+}
+.p-case:hover{border-color:rgba(125,23,53,.35);}
+
+/* шапка: кликабельна целиком (кроме ссылок и кнопок внутри) */
+html.js .p-case-head{cursor:pointer;}
+.p-case-head .project-intro{margin-bottom:0;}
+
+/* метки/теги стека в свёрнутой карточке */
+.p-case-tags{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin:22px 0 26px;
+}
+.p-case-tags span{
+  font-family:var(--mono); font-size:11px; letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--wine);
+  border:1px solid rgba(125,23,53,.28);
+  background:rgba(125,23,53,.05);
+  border-radius:999px;
+  padding:5px 11px;
+}
+
+/* кнопка-триггер: видна только при включённом JS */
+.p-toggle{display:none;}
+html.js .p-toggle{
+  display:inline-flex; align-items:center; gap:8px;
+  margin-top:2px;
+  padding:10px 20px;
+  border-radius:999px;
+  border:1.5px solid rgba(125,23,53,.45);
+  background:transparent;
+  color:var(--wine);
+  font:inherit; font-weight:600;
+  cursor:pointer;
+  transition:background .25s ease, color .25s ease, border-color .25s ease;
+}
+.p-toggle:hover{background:var(--wine); border-color:var(--wine); color:var(--paper);}
+.p-toggle:focus-visible{outline:2.5px solid var(--wine); outline-offset:3px;}
+.p-toggle-arrow{width:16px; height:16px; flex:none; transition:transform .35s ease;}
+.p-toggle-arrow path{fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+.p-case.is-open .p-toggle-arrow{transform:rotate(180deg);}
+
+/* раскрытие: grid-анимация высоты. Без .js блоки просто видны подряд. */
+.p-case-body{display:block;}
+html.js .p-case-body{
+  display:grid;
+  grid-template-rows:0fr;
+  transition:grid-template-rows .4s cubic-bezier(.16,1,.3,1);
+}
+html.js .p-case.is-open .p-case-body{grid-template-rows:1fr;}
+.p-case-inner{overflow:hidden; min-height:0;}
+html.js .p-case:not(.is-open) .p-case-inner{
+  visibility:hidden;
+  transition:visibility 0s linear .4s;
+}
+html.js .p-case.is-open .p-case-inner{
+  visibility:visible;
+  transition:visibility 0s;
+}
+.p-case-inner > :first-child{margin-top:36px;}
+
+/* мягкая виньетка кадров VANTA: края фото растворяются в подложку карточки.
+   Hero-кадр не трогаем — у него собственная радиальная маска к фону страницы. */
+.vanta-slide:not(.vanta-slide-hero) .vanta-card img{
+  -webkit-mask-image:radial-gradient(ellipse at center, black 74%, transparent 98%);
+  mask-image:radial-gradient(ellipse at center, black 74%, transparent 98%);
+}
+
+@media (prefers-reduced-motion: reduce){
+  html.js .p-case-body{transition:none;}
+  html.js .p-case:not(.is-open) .p-case-inner{transition:none;}
+  .p-toggle-arrow{transition:none;}
+}
+
