@@ -1,0 +1,82 @@
+name: Optimize & Convert Images to WebP
+
+on:
+  push:
+    paths:
+      - 'public/**'
+      - 'src/assets/**'
+      - 'assets/**'
+      - 'images/**'
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Pillow
+        run: pip install Pillow
+
+      - name: Run image optimizer
+        run: |
+          python3 - << 'EOF'
+          import os
+          from PIL import Image
+
+          # Папки, в которых лежат картинки
+          TARGET_DIRS = ['public', 'src/assets', 'assets', 'images']
+          MAX_WIDTH = 1920
+          QUALITY = 82
+
+          converted = 0
+          for root_dir in TARGET_DIRS:
+              if not os.path.exists(root_dir):
+                  continue
+              for root, _, files in os.walk(root_dir):
+                  for f in files:
+                      ext = f.lower().split('.')[-1]
+                      if ext in ['png', 'jpg', 'jpeg']:
+                          file_path = os.path.join(root, f)
+                          base_name = os.path.splitext(f)[0]
+                          webp_path = os.path.join(root, f"{base_name}.webp")
+
+                          try:
+                              with Image.open(file_path) as img:
+                                  # Уменьшаем избыточное разрешение генератора (4K -> 1920px)
+                                  w, h = img.size
+                                  if w > MAX_WIDTH:
+                                      new_h = int(h * (MAX_WIDTH / w))
+                                      img = img.resize((MAX_WIDTH, new_h), Image.Resampling.LANCZOS)
+
+                                  # Конвертируем в прогрессивный WebP
+                                  if img.mode in ("RGBA", "P"):
+                                      img = img.convert("RGBA")
+                                  else:
+                                      img = img.convert("RGB")
+                                      
+                                  img.save(webp_path, "WEBP", quality=QUALITY, method=6)
+                                  converted += 1
+                                  print(f"Optimized: {f} -> {base_name}.webp")
+
+                              # Удаляем исходный тяжелый PNG/JPG (2МБ+)
+                              os.remove(file_path)
+                          except Exception as e:
+                              print(f"Error processing {file_path}: {e}")
+
+          print(f"Total files converted: {converted}")
+          EOF
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-optimize images to WebP [skip ci]"
+          file_pattern: "*.webp *.png *.jpg *.jpeg"
