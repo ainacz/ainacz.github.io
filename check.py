@@ -30,7 +30,7 @@ for name, path in pages.items():
                 '<meta name="twitter:card"', '<link rel="canonical"'):
         if tag not in src: problems.append(f"{name}: нет {tag}")
 
-    css = re.search(r'href="((?:\.\./)?styles\.css)"', src)
+    css = re.search(r'href="((?:\.\./)?styles\.css)(?:\?[^"]*)?"', src)
     if not css: problems.append(f"{name}: не подключён styles.css")
     elif not (path.parent/css.group(1)).resolve().exists():
         problems.append(f"{name}: styles.css не найден по пути {css.group(1)}")
