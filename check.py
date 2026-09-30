@@ -1,8 +1,8 @@
 """Проверка сборки: структура страниц, внутренние ссылки, метатеги, якоря."""
 import re, pathlib, html.parser, sys
 
-ROOT = pathlib.Path("/home/claude/build")
-pages = {"index.html": ROOT/"index.html", "dev/index.html": ROOT/"dev/index.html"}
+ROOT = pathlib.Path(__file__).resolve().parent
+pages = {"index.html": ROOT/"index.html"}
 problems = []
 
 class P(html.parser.HTMLParser):
@@ -59,4 +59,4 @@ for name, path in pages.items():
 
 if problems:
     print("НАЙДЕНЫ ПРОБЛЕМЫ:"); [print(" -", x) for x in problems]; sys.exit(1)
-print("OK: обе страницы целы, ссылки и якоря живые, og.png на месте 1200x630")
+print("OK: главная страница цела, ссылки и якоря живые, og.png на месте 1200x630")

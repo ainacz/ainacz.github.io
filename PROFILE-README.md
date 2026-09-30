@@ -8,7 +8,6 @@
 учусь на IT-направлении.
 
 **Портфолио:** [ainacz.github.io](https://ainacz.github.io) ·
-**Для работодателя:** [ainacz.github.io/dev](https://ainacz.github.io/dev/) ·
 **Telegram:** [@ainacs1](https://t.me/ainacs1)
 
 ### Что уже сделано

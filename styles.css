@@ -1,4 +1,4 @@
-/* Долаан Нурзат — общие стили для index.html и dev/index.html */
+/* Долаан Нурзат — стили главной страницы */
 
 :root{
   --paper:#FBF9F4;
@@ -15,8 +15,8 @@
   --ochre-tint:#FBF1DF;
   --display:'Unbounded','Inter',sans-serif;
   --body:'Inter',sans-serif;
-  --mono:'JetBrains Mono',monospace;
-  --pixel:'Press Start 2P',monospace;
+  --mono:'Inter',Arial,sans-serif;
+  --pixel:'Inter',Arial,sans-serif;
   --edge:clamp(20px,6vw,88px);
 }
 
@@ -502,7 +502,7 @@ figure.shot{margin:0;}
   padding:16px 0;
 }
 .vanta-spec-label{
-  font-family:'JetBrains Mono',monospace; font-size:11px;
+  font-family:var(--body); font-size:11px;
   text-transform:uppercase; opacity:.6;
 }
 .vanta-spec-val{
@@ -706,3 +706,26 @@ html.js .p-case.is-open .p-case-inner{
   .p-toggle-arrow{transition:none;}
 }
 
+
+
+/* Читаемые подписи без узкого моноширинного шрифта. */
+.nav-links{font-size:14px;font-weight:500;text-transform:none;letter-spacing:0}
+.brand small{font-size:13px;text-transform:none;letter-spacing:0}
+.btn{font-size:14px;font-weight:600;letter-spacing:0}
+html.js .p-toggle{font-family:var(--body);font-size:14px;font-weight:600;letter-spacing:0;text-transform:none}
+.eyebrow{font-size:13px;letter-spacing:0}
+.stat span,.term,.step .when,.quote figcaption,.sub-label,.stack-row span,
+.caveat .mk,.roadmap,.ll-label,.ll-go,.value .vt,.about-line .tag,
+.todo b,.player figcaption b,.shot figcaption,.slot .st,.slot .sf,
+.flow-num,.flow-chips span,.vanta-spec-label,.vanta-slide figcaption,
+.carousel-count,.p-case-tags span,footer{
+  font-family:var(--body);font-size:13px;letter-spacing:0;text-transform:none;
+}
+.stat span{display:block;line-height:1.45}
+.term,.step .when{font-size:13px}
+.live-badge{font-family:var(--body);font-size:13px;font-weight:600;letter-spacing:0;text-transform:none}
+.live-badge i{display:none}
+.p-case-tags span,.stack-row span,.flow-chips span{font-size:13px}
+.stamp,.retro-cursor,.retro-progress,.holo{display:none}
+footer{font-size:13px}
+@media(max-width:760px){.nav-links{font-size:13px}}
