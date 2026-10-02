@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=f391af47ad14">
+<link rel="stylesheet" href="styles.css?v=7adcc012b3e6">
 </head>
 <body>
 <script>document.documentElement.classList.add('js');</script>
@@ -142,8 +142,8 @@
   <section class="section wrap" id="projects">
     <div class="holo" aria-hidden="true"></div>
     <h2 class="section-title reveal">Работы</h2>
-    <p class="section-lead reveal">Три кейса: сайт принимает брони каждый день, бот разбирает входящие заявки,
-    а концепт показывает, как AI собирает рекламный визуал. Нажмите на карточку, чтобы раскрыть подробности.</p>
+    <p class="section-lead reveal">Четыре проекта: сайт для бизнеса, Telegram-бот и две визуальные концепции —
+    напиток VANTA и автомобиль AURA X1. Нажмите на карточку, чтобы раскрыть подробности.</p>
 
     <!-- ======== КЕЙС 1: ПЯТНИЦА ======== -->
     <div class="p-case" id="case-pyatnica">
@@ -393,6 +393,56 @@
         </div>
       </div>
     </div>
+
+    <!-- КЕЙС 4: AURA X1 -->
+    <div class="p-case" id="aura">
+      <div class="p-case-head">
+        <span class="live-badge reveal">Концепт / AI-визуал и видео</span>
+        <h3 class="project-title reveal">AURA X1 <em>— автомобильный концепт</em></h3>
+        <p class="project-intro reveal">Визуальная серия для вымышленного электрического гран-туризмо.
+        Один автомобиль в разных сценах: студийный свет, горная дорога, салон и кадр для рекламы.
+        Часть серии оживлена в коротком видео.</p>
+        <div class="p-case-tags reveal">
+          <span>Автомобильный визуал</span><span>Midjourney / Hailuo AI</span><span>Изображения и видео</span>
+        </div>
+        <button class="p-toggle" type="button" aria-expanded="false" aria-controls="pc-body-aura">
+          <span class="p-toggle-text">Смотреть кейс</span>
+          <svg class="p-toggle-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="p-case-body" id="pc-body-aura">
+        <div class="p-case-inner">
+          <div class="aura-scene">
+            <video id="aura-film" controls playsinline muted loop preload="none" poster="assets/aura/aura-bridge.webp" aria-label="AURA X1 в движении">
+              <source src="assets/aura/aura-motion.mp4" type="video/mp4">
+              <a href="assets/aura/aura-motion.mp4">Скачать видео AURA X1</a>
+            </video>
+            <div class="aura-frost" aria-hidden="true"></div>
+            <div class="aura-stills">
+              <figure>
+                <img src="assets/aura/aura-reveal.webp" alt="AURA X1: форма кузова в студийном свете" loading="lazy" decoding="async" width="1376" height="768">
+                <figcaption>Экстерьер</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/aura/aura-interior.webp" alt="Салон AURA X1" loading="lazy" decoding="async" width="1376" height="768">
+                <figcaption>Интерьер</figcaption>
+              </figure>
+            </div>
+            <div class="aura-wordmark" aria-hidden="true">AURA<span>X1 / Electric GT</span></div>
+            <div class="aura-film-controls">
+              <button class="aura-play" type="button" aria-controls="aura-film">Смотреть видео</button>
+              <a href="assets/aura/aura-motion.mp4" target="_blank" rel="noopener">Полный кадр ↗</a>
+            </div>
+          </div>
+          <div class="vanta-specs">
+            <div><span class="vanta-spec-label">Проект</span><span class="vanta-spec-val">AURA X1 Electric GT</span></div>
+            <div><span class="vanta-spec-label">Формат</span><span class="vanta-spec-val">Визуальная концепция</span></div>
+            <div><span class="vanta-spec-label">Инструменты</span><span class="vanta-spec-val">Midjourney / Hailuo AI</span></div>
+            <div><span class="vanta-spec-label">Материалы</span><span class="vanta-spec-val">Серия кадров и видео</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
 <!-- КАК ПРОХОДИТ РАБОТА -->
@@ -495,6 +545,7 @@
       var label = btn.querySelector('.p-toggle-text');
       function setOpen(open) {
         card.classList.toggle('is-open', open);
+        if (!open) card.querySelectorAll('video').forEach(function (video) { video.pause(); });
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
         if (label) label.textContent = open ? 'Свернуть' : 'Смотреть кейс';
       }
@@ -585,5 +636,29 @@
   })();
 </script>
 
+<script>
+  (function () {
+    var scene = document.querySelector('.aura-scene');
+    if (!scene) return;
+    var video = scene.querySelector('video');
+    var button = scene.querySelector('.aura-play');
+    video.controls = false;
+    function update() {
+      button.textContent = video.paused ? 'Смотреть видео' : 'Пауза';
+      button.setAttribute('aria-label', video.paused ? 'Воспроизвести видео AURA X1' : 'Приостановить видео AURA X1');
+    }
+    button.addEventListener('click', function () {
+      if (video.paused) {
+        video.play().catch(function () {
+          button.textContent = 'Повторить';
+          button.setAttribute('aria-label', 'Повторить воспроизведение видео AURA X1');
+        });
+      } else video.pause();
+    });
+    video.addEventListener('play', update);
+    video.addEventListener('pause', update);
+    update();
+  })();
+</script>
 </body>
 </html>
